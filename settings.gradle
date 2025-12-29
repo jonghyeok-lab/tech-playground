@@ -1,0 +1,3 @@
+rootProject.name = 'tech-playground'
+
+include 'non-blocking-IO'
