@@ -2,3 +2,5 @@ rootProject.name = 'tech-playground'
 
 include 'non-blocking-IO'
 include 'jpa'
+include 'monitoring'
+include 'graceful-shutdown'
