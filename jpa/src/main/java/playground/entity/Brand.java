@@ -1,4 +1,4 @@
-package playground.jpa.entity;
+package playground.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,9 +9,9 @@ import lombok.ToString;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "keyword")
+@Table(name = "brand")
 @ToString
-public class Keyword {
+public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

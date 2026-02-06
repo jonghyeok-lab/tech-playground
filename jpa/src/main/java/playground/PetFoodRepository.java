@@ -1,8 +1,8 @@
-package playground.jpa;
+package playground;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import playground.jpa.entity.PetFood;
+import playground.entity.PetFood;
 
 import java.util.List;
 

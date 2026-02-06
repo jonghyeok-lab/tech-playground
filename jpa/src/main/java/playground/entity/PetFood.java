@@ -1,4 +1,4 @@
-package playground.jpa.entity;
+package playground.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

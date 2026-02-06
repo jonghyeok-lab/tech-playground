@@ -1,4 +1,4 @@
-package playground.nonblockingio.basic;
+package playground.shutdown;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 class ReactorBasicTest {
 
@@ -30,5 +31,18 @@ class ReactorBasicTest {
         StepVerifier.create(fluxItem)
                 .expectNextCount(3)
                 .verifyComplete();
+    }
+
+    @Test
+    void genenrate() {
+        Flux<String> flux = Flux.generate(
+                AtomicLong::new,
+                (state, sink) -> {
+                    long i = state.getAndIncrement();
+                    sink.next("3 x " + i + " = " + 3*i);
+                    if (i == 10) sink.complete();
+                    return state;
+                }, (state) -> System.out.println("state: " + state));
+        flux.subscribe();
     }
 }
