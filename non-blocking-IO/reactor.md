@@ -31,3 +31,11 @@
   - `public void cancel();`
 - Processor: Publisher와 Subscriber의 기능을 모두 가지고 있다.
 
+## 리액티브 스트림즈 관련 용어
+- Signal: Publisher와 Subscriber 간에 주고받는 상호작용
+- Demand: Subscriber 가 Publisher 에게 데이터 요청
+- Emit: Publisher 가 Subscriber에게 데이터를 전달
+- Upstream/Downstream: 데이터 흐름 방향, 반환된 Flux 위치에서 더 상위에 있는 Flux는 Upstream, 하위 있는 Flux 는 Downstream
+- Sequence: Operator의 체인형태로 데이터를 생성, filter 로 필터링, map으로 변환 과정 자체를 Sequence라 함
+- Operator: just, filter, map 같은 연산자
+- Source: 최초의 데이터
