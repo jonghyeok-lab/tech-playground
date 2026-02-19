@@ -1,10 +1,10 @@
-package playground.nonblockingio.schduler;
+package playground.nonblockingio.testing;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 
 @Slf4j
-public class GenerateTestExample {
+public class SignalBasedExample {
     public static Flux<String> sayHello() {
         return Flux
                 .just("Hello World!", "Hello Reactor!");

@@ -1,7 +1,7 @@
 package playground.nonblockingio;
 
 import org.junit.jupiter.api.Test;
-import playground.nonblockingio.schduler.GenerateTestExample;
+import playground.nonblockingio.testing.SignalBasedExample;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -20,7 +20,7 @@ public class StepVerifierTest {
 
     @Test
     void sayHelloTest() {
-        StepVerifier.create(GenerateTestExample.sayHello())
+        StepVerifier.create(SignalBasedExample.sayHello())
                 .expectNext("Hello World!")
                 .expectNext("Hello Reactor!")
                 .expectNextCount(0)
@@ -28,7 +28,7 @@ public class StepVerifierTest {
                 .verify();
 
         StepVerifier
-                .create(GenerateTestExample.sayHello())
+                .create(SignalBasedExample.sayHello())
                 .expectSubscription()
                 .as("expect Subscription")
                 .expectNext("Hello World!")
@@ -43,7 +43,7 @@ public class StepVerifierTest {
         Flux<Integer> source = Flux.just(2, 4, 6, 8, 10);
 
         StepVerifier
-                .create(GenerateTestExample.divideByTwo(source))
+                .create(SignalBasedExample.divideByTwo(source))
                 .expectSubscription()
                 .expectNext(1)
                 .expectNext(2)
@@ -57,7 +57,7 @@ public class StepVerifierTest {
     void takeNumber() {
         Flux<Integer> source = Flux.range(0, 1000);
         StepVerifier
-                .create(GenerateTestExample.takeNumber(source, 500),
+                .create(SignalBasedExample.takeNumber(source, 500),
                         StepVerifierOptions.create().scenarioName(
                                 "Verify from 0 to 499"
                         ))
