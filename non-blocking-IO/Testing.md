@@ -1,4 +1,10 @@
 # Reactor 의 Testing
+- StepVerifier
+  - Reactor Sequence에서 발생하는 Signal 이벤트 테스트
+  - withVirtualTime() 과 VirtualTimeScheduler() 이용해서 시간 기반 테스트 진행
+  - thenConsumeWhile() 을 이용해서 Backpressure 테스트 진행
+  - expectAccessibleContext() 이용해서 Sequence 에 전파되는 Context를 테스트
+  - recordWith(), consumeRecordedWith(), expectRecordedMatches() 등을 이용해 Record기반 테스트
 
 ## Signal 이벤트 기반 테스트
 ### expect()
@@ -17,3 +23,7 @@
 - 가상의 시간을 이용해 미래에 실행되는 Reactor Sequence의 시간을 앞당겨 테스트할 수 있습니다.
   - withVirtualTime() 으로 가능
   - expectNoEvent(Duration duration) 은 duration 동안 이벤트도 발생하지 않는걸 기대함과 동시에 duration 만큼 virtual 시간을 앞당긴다.
+
+## backpressure 테스트
+- 발행측에서 Overflow 전략,
+- 테스트 -> verifyThenAssertThat().hasDroppedElements();
