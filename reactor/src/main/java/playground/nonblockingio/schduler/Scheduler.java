@@ -23,7 +23,7 @@ public class Scheduler {
                 .doOnNext(data -> log.info("doOnNext fromArray: {}", data))
                 .filter(data -> data > 3)
                 .doOnNext(data -> log.info("doOnNext filter: {}", data))
-                .subscribeOn(Schedulers.parallel())
+                .subscribeOn(Schedulers.boundedElastic())
                 .map(data -> data * 2)
                 .doOnNext(data -> log.info("doOnNext map: {}", data))
                 .subscribe(data -> log.info("doOnNext subscribe: {}", data));
