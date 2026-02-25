@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>SSE Last-Event-ID 데모</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        .section { border: 1px solid #ccc; padding: 16px; margin-bottom: 24px; border-radius: 6px; }
+        h2 { margin-top: 0; }
+        button { margin-right: 8px; padding: 6px 14px; cursor: pointer; }
+        #log {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 12px;
+            height: 420px;
+            overflow-y: auto;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .line { margin: 2px 0; }
+        .initial  { color: #9cdcfe; }
+        .reconnect { color: #dcdcaa; }
+        .event    { color: #4ec9b0; }
+        .error    { color: #f44747; }
+        .done     { color: #b5cea8; }
+        .meta     { color: #808080; }
+    </style>
+</head>
+<body>
+
+<div class="section">
+    <h2>Last-Event-ID 동작 흐름</h2>
+
+    <p>
+        <strong>흐름:</strong><br>
+        1. 연결 시작 → 서버가 이벤트 #1 ~ #5 전송 후 <em>강제 종료</em><br>
+        2. 브라우저가 자동 재연결 시 <code>Last-Event-ID: 5</code> 헤더를 서버로 전송<br>
+        3. 서버가 헤더를 읽고 이벤트 #6 ~ #10 부터 이어서 전송 후 정상 완료
+    </p>
+
+    <button onclick="connect()">연결 시작</button>
+    <button onclick="disconnect()">연결 끊기</button>
+    <button onclick="clearLog()">로그 초기화</button>
+
+    <br><br>
+    <div id="log"></div>
+</div>
+
+<script>
+    let eventSource = null;
+
+    function connect() {
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        addLog('🔌 SSE 연결 시작...', 'initial');
+        addLog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'meta');
+
+        eventSource = new EventSource('/mvc/last-event-id');
+
+        // 연결 성공
+        eventSource.onopen = () => {
+            addLog(`✅ 연결됨 (readyState: ${eventSource.readyState})`, 'initial');
+        };
+
+        // 이벤트 수신
+        eventSource.addEventListener('sse-event', (event) => {
+            addLog(`📨 이벤트 수신  id=${event.lastEventId}  data="${event.data}"`, 'event');
+        });
+
+        // 오류 / 재연결
+        eventSource.onerror = () => {
+            if (eventSource.readyState === EventSource.CONNECTING) {
+                // 브라우저가 Last-Event-ID 헤더를 자동으로 담아 재연결 시도
+                addLog('', 'meta');
+                addLog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'meta');
+                addLog('⚠️  연결 끊김 감지', 'error');
+                addLog('🔄 브라우저 자동 재연결 중... (Last-Event-ID: 5 헤더 자동 포함)', 'reconnect');
+                addLog('   → 서버가 400 반환 예정 → 재연결 완전 중단', 'reconnect');
+                addLog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'meta');
+            } else if (eventSource.readyState === EventSource.CLOSED) {
+                // 400/500 응답을 받으면 CLOSED 상태로 전환되며 더 이상 재연결하지 않음
+                addLog('', 'meta');
+                addLog('🛑 서버 400 응답 → EventSource.CLOSED → 재연결 완전 중단', 'error');
+                addLog('   readyState: ' + eventSource.readyState + ' (2 = CLOSED)', 'meta');
+            }
+        };
+    }
+
+    function disconnect() {
+        if (eventSource) {
+            eventSource.close();
+            addLog('🔌 수동으로 연결 종료 (readyState: ' + eventSource.readyState + ')', 'meta');
+        }
+    }
+
+    function clearLog() {
+        document.getElementById('log').innerHTML = '';
+    }
+
+    function addLog(message, cssClass) {
+        const log = document.getElementById('log');
+        const line = document.createElement('div');
+        line.className = 'line ' + (cssClass || '');
+        line.textContent = message;
+        log.appendChild(line);
+        log.scrollTop = log.scrollHeight;
+    }
+</script>
+
+</body>
+</html>
