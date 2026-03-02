@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+//import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -22,7 +23,7 @@ public class SSEWithMVCController {
         SseEmitter emitter = new SseEmitter();
         emitter.send(SseEmitter.event()
                 .id("id-1")
-                .data("Hello World")
+                .data(Thread.currentThread().getName())
                 .name("event 필드")
                 .comment("event 코멘트")
                 .reconnectTime(10000));
@@ -60,7 +61,7 @@ public class SSEWithMVCController {
                     emitter.send(SseEmitter.event()
                             .id(String.valueOf(i))
                             .name("sse-event")
-                            .data("이벤트 #" + i + " [" + connectionLabel + "]")
+                            .data("이벤트 #" + i + " [" + Thread.currentThread().getName() + "]")
                             .reconnectTime(2000)); // 끊기면 2초 후 재연결
 
                     log.info("이벤트 전송 완료: #{}", i);
